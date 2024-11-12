@@ -1,54 +1,62 @@
-import React, { useState, useReducer } from "react"
-import { css } from "@emotion/react"
-import { useRouter } from "next/router"
-import { ID_ICON, PASSWORD2_ICON } from "@/components/teacher/Signup/SignupIcons/SignupIcons"
-import Input from "@/components/common/Input/Input"
-import useNavigate from "@/hooks/useNavigate"
-import LoadImage from "@/components/common/LoadImage/LoadImage"
-import Button from "@/components/common/Button/Button"
+import React, { useReducer } from "react";
+// import React, { useState, useReducer } from "react";
+import { css } from "@emotion/react";
+// import { useRouter } from "next/router";
+import { ID_ICON, PASSWORD2_ICON } from "@/components/teacher/Signup/SignupIcons/SignupIcons";
+import Input from "@/components/common/Input/Input";
+import useNavigate from "@/hooks/useNavigate";
+// import LoadImage from "@/components/common/LoadImage/LoadImage";
+import Button from "@/components/common/Button/Button";
+import Image from "next/image";
 
-const initialState = { id: "", password: "" }
+const initialState = { id: "", password: "" };
 
 const inputReducer = (state: { id: string; password: string }, action: { type: string; value: string }) => {
 	switch (action.type) {
 		case "CHANGE_ID":
-			return { ...state, id: action.value }
+			return { ...state, id: action.value };
 		case "CHANGE_PW":
-			return { ...state, password: action.value }
+			return { ...state, password: action.value };
 		default:
-			return state
+			return state;
 	}
-}
+};
 
-function login() {
-	const [inputState, dispatchInput] = useReducer(inputReducer, initialState)
-	const router = useRouter()
-	const navigate = useNavigate()
+// 컴포넌트 이름을 Login으로 변경
+function Login() {
+	const [inputState, dispatchInput] = useReducer(inputReducer, initialState);
+	// const router = useRouter();
+	const navigate = useNavigate();
 
-	// 함수 반환 타입 Promise<void> 로 추후 변경
 	const loginHandler = async () => {
 		if (inputState.id === "" || inputState.password === "") {
-			alert("빈 칸을 모두 입력해주세요.")
-			return
+			alert("빈 칸을 모두 입력해주세요.");
+			return;
 		}
-		// 로그인 api 요청
-		alert("로그인 요청")
-	}
+		alert("로그인 요청");
+	};
 
 	const navToSignup = () => {
-		navigate("/student/signup", "bottomToTop")
-	}
+		navigate("/student/signup", "bottomToTop");
+	};
 
-	const handleKeyDown = (event: any) => {
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {
-			loginHandler()
+			loginHandler();
 		}
-	}
-	
+	};
+
 	return (
 		<div css={wrapperCSS}>
 			<div css={imageSectionCSS}>
-				<img src={"/assets/login/login_illust_2.jpg"} alt={"signup_illust"} css={imageWrapperCSS} />
+				<Image
+					src="/assets/login/login_illust_2.jpg"
+					alt="signup_illust"
+					css={imageWrapperCSS}
+					layout="responsive"
+					width={500} 
+					height={300} 
+				/>
 			</div>
 			<div css={loginSectionCSS}>
 				<div css={loginHeaderCSS}>
@@ -56,12 +64,10 @@ function login() {
 					<div css={headerLabelCSS}>환영합니다!</div>
 				</div>
 				<div css={loginFormCSS}>
-					{/* <div>{alarm}</div> */}
 					<Input
 						customCss={inputCSS}
 						leftContent={ID_ICON}
 						theme={"mobileDefault"}
-						// customCss={inputCSS}
 						type="text"
 						placeholder="아이디를 입력해 주세요."
 						onChange={(e) => dispatchInput({ type: "CHANGE_ID", value: e.target.value })}
@@ -70,7 +76,6 @@ function login() {
 						customCss={inputCSS}
 						leftContent={PASSWORD2_ICON}
 						theme={"mobileDefault"}
-						// customCss={inputCSS}
 						type="password"
 						placeholder="비밀번호를 입력해주세요."
 						onChange={(e) => dispatchInput({ type: "CHANGE_PW", value: e.target.value })}
@@ -91,14 +96,13 @@ function login() {
 						text={"로그인"}
 						fontSize={"var(--teacher-h5)"}
 						onClick={loginHandler}
-					></Button>
+					/>
 				</div>
 			</div>
 		</div>
-	)
+	);
 }
 
-// 임시 값
 const wrapperCSS = css`
 	display: flex;
 	flex: 1;
@@ -216,4 +220,4 @@ const signupCSS = css`
 	}
 `
 
-export default login
+export default Login
