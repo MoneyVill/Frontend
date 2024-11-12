@@ -41,7 +41,7 @@ function Login() {
 
 
 	const navToSignup = () => {
-		navigate("/student/signup", "bottomToTop");
+		navigate("/teacher/signup", "bottomToTop");
 	};
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
