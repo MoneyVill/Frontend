@@ -1,11 +1,14 @@
-import React, { useReducer } from "react";
-import Image from "next/image";
+import { useState, useReducer } from "react";
 import { css } from "@emotion/react";
 import Input from "@/components/common/Input/Input";
 import { ID_ICON, PASSWORD2_ICON } from "@/components/teacher/Signup/SignupIcons/SignupIcons";
 import Button from "@/components/common/Button/Button";
 import useNavigate from "@/hooks/useNavigate";
-// import LoadImage from "@/components/common/LoadImage/LoadImage"
+import { setCookie } from "@/api/cookie";
+import { postLoginAPI } from "@/api/common/postLoginAPI";
+import Image from "next/image";
+
+import useGetTokenStatus from "@/hooks/useGetTokenStatus";
 
 const initialState = { id: "", password: "" };
 
@@ -18,20 +21,38 @@ const inputReducer = (state: { id: string; password: string }, action: { type: s
 		default:
 			return state;
 	}
-};
+}
 
 function Login() {
+	const [alarm, setAlarm] = useState<string>("");
 	const [inputState, dispatchInput] = useReducer(inputReducer, initialState);
 	const navigate = useNavigate();
+	const [setTokenStatus] = useGetTokenStatus();  // Make sure this returns a function
 
 	const loginHandler = async () => {
 		if (inputState.id === "" || inputState.password === "") {
-			alert("빈 칸을 모두 입력해주세요.");
+			setAlarm("빈 칸을 모두 입력해주세요.");
 			return;
 		}
+
+		setAlarm("");
+
+		// 로그인 요청
+		postLoginAPI({
+			body: { identity: inputState.id, password: inputState.password },
+		})
+			.then((res) => {
+				setCookie("Authorization", res, { path: "/", maxAge: 30 * 24 * 60 * 60 });
+
+				setTokenStatus({ showMessage: false });
+			})
+			.catch((error) => {
+				setAlarm(error.response.data.message);
+			});
 	};
 
 	const navToSignup = () => {
+		console.log('navToSignup clicked');
 		navigate("/student/signup", "bottomToTop");
 	};
 
@@ -49,8 +70,8 @@ function Login() {
 					alt="signup_illust"
 					css={imageWrapperCSS}
 					layout="responsive"
-					width={500}  // 실제 이미지 크기에 맞게 설정
-					height={300} // 실제 이미지 크기에 맞게 설정
+					width={500} 
+					height={300} 
 				/>
 			</div>
 			<div css={loginSectionCSS}>
@@ -59,6 +80,7 @@ function Login() {
 					<div css={headerLabelCSS}>환영합니다!</div>
 				</div>
 				<div css={loginFormCSS}>
+					<div>{alarm}</div>
 					<Input
 						customCss={inputCSS}
 						leftContent={ID_ICON}
@@ -98,6 +120,7 @@ function Login() {
 	);
 }
 
+// 임시 값
 const wrapperCSS = css`
 	display: flex;
 	flex: 1;
