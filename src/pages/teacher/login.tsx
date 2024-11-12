@@ -11,6 +11,7 @@ import Image from "next/image";
 
 const initialState = { id: "", password: "" };
 
+
 const inputReducer = (state: { id: string; password: string }, action: { type: string; value: string }) => {
 	switch (action.type) {
 		case "CHANGE_ID":
@@ -21,6 +22,7 @@ const inputReducer = (state: { id: string; password: string }, action: { type: s
 			return state;
 	}
 };
+
 
 // 컴포넌트 이름을 Login으로 변경
 function Login() {
@@ -33,8 +35,10 @@ function Login() {
 			alert("빈 칸을 모두 입력해주세요.");
 			return;
 		}
+
 		alert("로그인 요청");
 	};
+
 
 	const navToSignup = () => {
 		navigate("/student/signup", "bottomToTop");
