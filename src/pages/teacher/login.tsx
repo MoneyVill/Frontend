@@ -1,13 +1,13 @@
-import React, { useReducer } from "react";
-// import React, { useState, useReducer } from "react";
+import React, { useState, useReducer } from "react";
 import { css } from "@emotion/react";
-// import { useRouter } from "next/router";
 import { ID_ICON, PASSWORD2_ICON } from "@/components/teacher/Signup/SignupIcons/SignupIcons";
 import Input from "@/components/common/Input/Input";
 import useNavigate from "@/hooks/useNavigate";
-// import LoadImage from "@/components/common/LoadImage/LoadImage";
 import Button from "@/components/common/Button/Button";
 import Image from "next/image";
+import { setCookie } from "@/api/cookie";
+import { postLoginAPI } from "@/api/common/postLoginAPI";
+import useGetTokenStatus from "@/hooks/useGetTokenStatus";
 
 const initialState = { id: "", password: "" };
 
@@ -26,17 +26,32 @@ const inputReducer = (state: { id: string; password: string }, action: { type: s
 
 // 컴포넌트 이름을 Login으로 변경
 function Login() {
+	const [alarm, setAlarm] = useState<string>("");
 	const [inputState, dispatchInput] = useReducer(inputReducer, initialState);
-	// const router = useRouter();
 	const navigate = useNavigate();
+	const [setTokenStatus] = useGetTokenStatus();  // Make sure this returns a function
 
 	const loginHandler = async () => {
 		if (inputState.id === "" || inputState.password === "") {
-			alert("빈 칸을 모두 입력해주세요.");
+			setAlarm("빈 칸을 모두 입력해주세요.");
 			return;
 		}
 
-		alert("로그인 요청");
+		setAlarm("");
+		
+		// 로그인 요청
+		postLoginAPI({
+			body: { identity: inputState.id, password: inputState.password },
+		})
+
+			.then((res) => {
+				setCookie("Authorization", res, { path: "/", maxAge: 30 * 24 * 60 * 60 });
+
+				setTokenStatus({ showMessage: false });
+			})
+			.catch((error) => {
+				setAlarm(error.response.data.message);
+			});
 	};
 
 
