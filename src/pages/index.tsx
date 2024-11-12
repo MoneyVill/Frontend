@@ -24,16 +24,16 @@ export default function Home() {
 								router.push("/student/login")
 							}}
 						></Button>
-            <Button
-              theme={"highlighted"}
-              width={"240px"}
-              height={"84px"}
-              text={"교사 로그인"}
-              fontSize={"var(--teacher-h2)"}
-              onClick={() => {
-                router.push("/teacher/login")
-              }}
-            ></Button>
+						<Button
+						theme={"highlighted"}
+						width={"240px"}
+						height={"84px"}
+						text={"교사 로그인"}
+						fontSize={"var(--teacher-h2)"}
+						onClick={() => {
+							router.push("/teacher/login")
+						}}
+						></Button>
 					</div>
 					{/* <img
 						src={"/assets/guide/14.jpg"}

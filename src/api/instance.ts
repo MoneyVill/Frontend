@@ -1,5 +1,8 @@
 import axios from "axios"
-import { getCookie, removeCookie } from "./cookie"
+
+import { getCookie } from "./cookie"
+// import { getCookie, removeCookie } from "./cookie"
+
 
 /**
  * 인증이 필요 없는 기본 요청
