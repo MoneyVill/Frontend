@@ -1,11 +1,13 @@
 import { useState, useReducer } from "react"
 import { css } from "@emotion/react"
+import { ID_ICON, PASSWORD2_ICON } from "@/components/teacher/Signup/SignupIcons/SignupIcons"
+import { setCookie } from "@/api/cookie"
+import { postLoginAPI } from "@/api/common/postLoginAPI"
 import LoadImage from "@/components/common/LoadImage/LoadImage"
 import Input from "@/components/common/Input/Input"
-import { ID_ICON, PASSWORD2_ICON } from "@/components/teacher/Signup/SignupIcons/SignupIcons"
 import Button from "@/components/common/Button/Button"
-import { useRouter } from "next/router"
 import useNavigate from "@/hooks/useNavigate"
+import useGetTokenStatus from "@/hooks/useGetTokenStatus"
 
 const initialState = { id: "", password: "" }
 
@@ -23,13 +25,24 @@ const inputReducer = (state: { id: string; password: string }, action: { type: s
 function login() {
 	const [inputState, dispatchInput] = useReducer(inputReducer, initialState)
 	const navigate = useNavigate()
-	const router = useRouter()
+	const [getTokenStatus, setTokenStatus] = useGetTokenStatus()
 
-	const loginHandler = async () => {
+	const loginHandler = () => {
 		if (inputState.id === "" || inputState.password === "") {
 			alert("빈 칸을 모두 입력해주세요.") // 멘트 변경 가능
 			return
 		}
+		// 로그인 요청
+		postLoginAPI({
+			body: { identity: inputState.id, password: inputState.password },
+		})
+		.then((res) => {
+			setCookie("Authorization", res, { path: "/", maxAge: 30 * 24 * 60 * 60 })
+			setTokenStatus({showMessage: false})
+		})
+		.catch((error) => {
+			alert(error.response.data.message)
+		})
 	}
 
 	const navToSignup = () => {
