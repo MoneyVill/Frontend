@@ -17,7 +17,7 @@ type responseType = {
 
 export const postTeacherAPI = async ({ body }: paramsType) => {
 	try {
-		const response: responseType = await formDataInstance.post("/teacher/signup", body)
+		const response: responseType = await formDataInstance.post("/teacher", body)
 
 		return response.data
 	} catch (error) {

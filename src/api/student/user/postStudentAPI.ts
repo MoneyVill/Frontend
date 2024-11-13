@@ -17,7 +17,7 @@ type responseType = {
 
 export const postStudentAPI = async ({ body }: paramsType) => {
 	try {
-		const response: responseType = await defaultInstance.post("/student/signup", body)
+		const response: responseType = await defaultInstance.post("/student", body)
 
 
 		if (response.status === 200) return response.data
