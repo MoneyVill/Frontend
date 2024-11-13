@@ -4,7 +4,7 @@ import { successReturnType, errorReturnType } from "@/types/common/apiReturnType
 type paramsType = {
 	body: {
 		name: string
-		identity: string
+		nickname: string
 		password: string
 		passwordConfirm: string
 	}
@@ -17,7 +17,8 @@ type responseType = {
 
 export const postStudentAPI = async ({ body }: paramsType) => {
 	try {
-		const response: responseType = await defaultInstance.post("/student", body)
+		const response: responseType = await defaultInstance.post("/student/signup", body)
+
 
 		if (response.status === 200) return response.data
 	} catch (error) {

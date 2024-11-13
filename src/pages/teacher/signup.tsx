@@ -238,7 +238,6 @@ function Signup() {
 				},
 			})
 				.then(() => {
-					console.log("로그인이 안돼")
 					router.push("/teacher/login")
 				})
 				.catch((error) => {
