@@ -3,7 +3,7 @@ import { postDuplicationCheckType } from "@/types/common/apiReturnTypes"
 
 type bodyType = {
 	body: {
-		nickname: string
+		identity: string
 	}
 }
 

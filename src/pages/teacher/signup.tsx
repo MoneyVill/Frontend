@@ -155,7 +155,7 @@ function Signup() {
 		dispatchValid({ type: "VALID_ID", value: false })
 
 		if (checkVerify) {
-			postDuplicationCheckAPI({ body: { nickname: inputState.id } }).then((res) => {
+			postDuplicationCheckAPI({ body: { identity: inputState.id } }).then((res) => {
 				if (res?.isDuplicated === false) {
 					// 사용 가능하면
 					dispatchValidMessage({ type: "VALID_ID", value: "사용 가능한 ID입니다." })
@@ -232,9 +232,9 @@ function Signup() {
 			postTeacherAPI({
 				body: {
 					name: inputState.name,
-					nickname: inputState.id,
+					identity: inputState.id,
 					password: inputState.password,
-					passwordConfirm: inputState.password,
+					checkedPassword: inputState.password,
 				},
 			})
 				.then(() => {

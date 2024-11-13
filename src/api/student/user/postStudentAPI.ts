@@ -4,9 +4,9 @@ import { successReturnType, errorReturnType } from "@/types/common/apiReturnType
 type paramsType = {
 	body: {
 		name: string
-		nickname: string
+		identity: string
 		password: string
-		passwordConfirm: string
+		checkedPassword: string
 	}
 }
 
