@@ -14,7 +14,7 @@ type responseType = {
 
 export const postDuplicationCheckAPI = async ({ body }: bodyType) => {
 	try {
-		const response: responseType = await defaultInstance.post("/duplicated-id", body)
+		const response: responseType = await defaultInstance.post("/check-duplicate", body)
 
 		return response.data
 	} catch (error) {
