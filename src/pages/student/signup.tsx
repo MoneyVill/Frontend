@@ -234,7 +234,7 @@ function Signup() {
 					name: inputState.name,
 					identity: inputState.id,
 					password: inputState.password,
-					checkedPassword: inputState.password,
+					passwordConfirm: inputState.password,
 				},
 			})
 				.then(() => {

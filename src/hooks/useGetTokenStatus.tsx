@@ -1,9 +1,6 @@
 import { getTokenStatusAPI } from '@/api/common/getTokenStatusAPI'
-
-// import React from 'react'
 import { tokenStatus } from "@/store/store"
 import { useAtom } from "jotai"
-
 import { getTokenStatusType } from '@/types/common/apiReturnTypes'
 
 
@@ -18,7 +15,6 @@ function useGetTokenStatus(): [getTokenStatusType, ({showMessage}: {showMessage:
             return(res)
         })
         .catch((error) => {
-
             setTokenStatusAtom(() => {
                 return {
                     status: "require_login",
