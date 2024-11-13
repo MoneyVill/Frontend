@@ -26,10 +26,11 @@ const inputReducer = (state: { id: string; password: string }, action: { type: s
 
 // 컴포넌트 이름을 Login으로 변경
 function Login() {
+	// const [ setAlarm ] = useState<string>("");
 	const [alarm, setAlarm] = useState<string>("");
 	const [inputState, dispatchInput] = useReducer(inputReducer, initialState);
 	const navigate = useNavigate();
-	const [setTokenStatus] = useGetTokenStatus();  // Make sure this returns a function
+	const [setTokenStatus] = useGetTokenStatus(); 
 
 	const loginHandler = async () => {
 		if (inputState.id === "" || inputState.password === "") {
@@ -83,6 +84,7 @@ function Login() {
 					<div css={headerLabelCSS}>환영합니다!</div>
 				</div>
 				<div css={loginFormCSS}>
+					<div css={alarmCSS}>{alarm}</div>
 					<Input
 						customCss={inputCSS}
 						leftContent={ID_ICON}
@@ -237,6 +239,11 @@ const signupCSS = css`
 	&:hover {
 		color: rgba(0, 20, 50, 0.7);
 	}
+`
+
+const alarmCSS = css`
+	font-size: var(--teacher-h5);
+	color: var(--teacher-warning-color);
 `
 
 export default Login
