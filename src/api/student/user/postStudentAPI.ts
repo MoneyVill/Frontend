@@ -6,7 +6,7 @@ type paramsType = {
 		name: string
 		identity: string
 		password: string
-		checkedPassword: string
+		passwordConfirm: string
 	}
 }
 

@@ -1,7 +1,7 @@
 import { useReducer, useEffect } from "react"
 // import { useReducer, useRef, useEffect } from "react"
 import { css } from "@emotion/react"
-import { postStudentAPI } from "@/api/student/user/postStudentAPI"
+import { postTeacherAPI } from "@/api/teacher/user/postTeacherAPI"
 import { KOREAN_ONLY, ENG_NUM_ONLY } from "@/util/regex"
 // import { KOREAN_ONLY, ENG_NUM_ONLY, PHONE_NUMBER_ONLY } from "@/util/regex"
 import { lengthCheck } from "@/util/lengthCheck"
@@ -155,7 +155,7 @@ function Signup() {
 		dispatchValid({ type: "VALID_ID", value: false })
 
 		if (checkVerify) {
-			postDuplicationCheckAPI({ body: { identity: inputState.id } }).then((res) => {
+			postDuplicationCheckAPI({ body: { nickname: inputState.id } }).then((res) => {
 				if (res?.isDuplicated === false) {
 					// 사용 가능하면
 					dispatchValidMessage({ type: "VALID_ID", value: "사용 가능한 ID입니다." })
@@ -229,16 +229,17 @@ function Signup() {
 		checkValidPW2Handler()
 
 		if (validState.name && validState.id && validState.password && validState.password2) {
-			postStudentAPI({
+			postTeacherAPI({
 				body: {
 					name: inputState.name,
-					identity: inputState.id,
+					nickname: inputState.id,
 					password: inputState.password,
-					checkedPassword: inputState.password,
+					passwordConfirm: inputState.password,
 				},
 			})
 				.then(() => {
-					router.push("/student/login")
+					console.log("로그인이 안돼")
+					router.push("/teacher/login")
 				})
 				.catch((error) => {
 					console.log(error)
