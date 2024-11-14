@@ -110,52 +110,43 @@ function Signup() {
 		dispatchValid({ type: "VALID_NAME", value: true })
 	}, [inputState.name]);
 
-	const checkValidIDHandler = useCallback ((forSumbit = false, checkVerify = false) => {
-		// 입력값이 없을 때
+	const checkValidIDHandler = useCallback((forSubmit = false, checkVerify = false) => {
 		if (inputState.id === "") {
-			// 제출버튼을 눌렀다면
-			if (forSumbit) {
-				dispatchValidMessage({ type: "VALID_ID", value: "아이디를 입력해 주세요." })
-			}
-			dispatchValid({ type: "VALID_ID", value: false })
-			return
+		  if (forSubmit) {
+			dispatchValidMessage({ type: "VALID_ID", value: "아이디를 입력해 주세요." });
+		  }
+		  dispatchValid({ type: "VALID_ID", value: false });
+		  return;
 		}
-		// 유효하지 않을 때
-		if (ENG_NUM_ONLY.test(inputState.id) === false || lengthCheck(inputState.id, 4, 10) === false) {
-			dispatchValid({ type: "VALID_ID", value: false })
-			dispatchValidMessage({
-				type: "VALID_ID",
-				value: "아이디는 영어, 숫자 조합으로 최소 4자부터 최대 10자까지 입력 가능합니다.",
-			})
-			return
+	
+		if (!ENG_NUM_ONLY.test(inputState.id) || !lengthCheck(inputState.id, 4, 10)) {
+		  dispatchValid({ type: "VALID_ID", value: false });
+		  dispatchValidMessage({
+			type: "VALID_ID",
+			value: "아이디는 영어, 숫자 조합으로 최소 4자부터 최대 10자까지 입력 가능합니다.",
+		  });
+		  return;
 		}
-		// 중복 확인을 하지 않았다면
-		if (forSumbit) {
-			if (!validState.id) {
-				dispatchValidMessage({ type: "VALID_ID", value: "아이디 중복 확인을 해주세요." })
-				dispatchValid({ type: "VALID_ID", value: false })
-				return
-			}
+	
+		if (forSubmit && !validState.id) {
+		  dispatchValidMessage({ type: "VALID_ID", value: "아이디 중복 확인을 해주세요." });
+		  dispatchValid({ type: "VALID_ID", value: false });
+		  return;
 		}
-
-		dispatchValidMessage({ type: "VALID_ID", value: "" })
-		dispatchValid({ type: "VALID_ID", value: false })
-
+	
 		if (checkVerify) {
-			postDuplicationCheckAPI({ body: { identity: inputState.id } }).then((res) => {
-				if (res?.isDuplicated === false) {
-					// 사용 가능하면
-					dispatchValidMessage({ type: "VALID_ID", value: "사용 가능한 ID입니다." })
-					dispatchValid({ type: "VALID_ID", value: true })
-				} else {
-					// 불가능하면
-					dispatchValidMessage({ type: "VALID_ID", value: "이미 중복된 아이디, 혹은 사용 불가능한 아이디입니다." })
-					dispatchValid({ type: "VALID_ID", value: false })
-					return
-				}
-			})
+		  postDuplicationCheckAPI({ body: { identity: inputState.id } }).then((res) => {
+			if (res?.isDuplicated === false) {
+			  dispatchValidMessage({ type: "VALID_ID", value: "사용 가능한 ID입니다." });
+			  dispatchValid({ type: "VALID_ID", value: true });
+			} else {
+			  dispatchValidMessage({ type: "VALID_ID", value: "이미 중복된 아이디입니다." });
+			  dispatchValid({ type: "VALID_ID", value: false });
+			}
+		  });
 		}
-	}, [inputState.id, validState.id])
+	  },
+	  [inputState.id, validState.id]);	 
 
 	const checkValidPWHandler = useCallback ((forSumbit = false) => {
 		if (inputState.password === "") {

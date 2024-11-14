@@ -1,5 +1,3 @@
-
-
 import { useState, useReducer } from "react";
 import { css } from "@emotion/react";
 import Input from "@/components/common/Input/Input";
@@ -53,6 +51,8 @@ function Login() {
 				setCookie("Authorization", res, { path: "/", maxAge: 30 * 24 * 60 * 60 });
 
 				refresh({ showMessage: false });
+
+				navigate("/student/enter")
 			})
 			.catch((error) => {
 				setAlarm(error.response.data.message);

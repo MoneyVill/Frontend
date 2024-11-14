@@ -49,6 +49,8 @@ function Login() {
 				setCookie("Authorization", res, { path: "/", maxAge: 30 * 24 * 60 * 60 });
 
 				refresh({ showMessage: false });
+				
+				navigate("/teacher/create")
 			})
 			.catch((error) => {
 				setAlarm(error.response.data.message);

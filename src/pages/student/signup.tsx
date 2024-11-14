@@ -107,39 +107,40 @@ function Signup() {
 	const checkValidIDHandler = useCallback((forSubmit = false, checkVerify = false) => {
 		if (inputState.id === "") {
 		  if (forSubmit) {
-			dispatchValidMessage({ type: "VALID_ID", value: "아이디를 입력해 주세요." })
+			dispatchValidMessage({ type: "VALID_ID", value: "아이디를 입력해 주세요." });
 		  }
-		  dispatchValid({ type: "VALID_ID", value: false })
-		  return
+		  dispatchValid({ type: "VALID_ID", value: false });
+		  return;
 		}
-		
+	
 		if (!ENG_NUM_ONLY.test(inputState.id) || !lengthCheck(inputState.id, 4, 10)) {
-		  dispatchValid({ type: "VALID_ID", value: false })
+		  dispatchValid({ type: "VALID_ID", value: false });
 		  dispatchValidMessage({
 			type: "VALID_ID",
 			value: "아이디는 영어, 숫자 조합으로 최소 4자부터 최대 10자까지 입력 가능합니다.",
-		  })
-		  return
+		  });
+		  return;
 		}
 	
 		if (forSubmit && !validState.id) {
-		  dispatchValidMessage({ type: "VALID_ID", value: "아이디 중복 확인을 해주세요." })
-		  dispatchValid({ type: "VALID_ID", value: false })
-		  return
+		  dispatchValidMessage({ type: "VALID_ID", value: "아이디 중복 확인을 해주세요." });
+		  dispatchValid({ type: "VALID_ID", value: false });
+		  return;
 		}
 	
 		if (checkVerify) {
 		  postDuplicationCheckAPI({ body: { identity: inputState.id } }).then((res) => {
 			if (res?.isDuplicated === false) {
-			  dispatchValidMessage({ type: "VALID_ID", value: "사용 가능한 ID입니다." })
-			  dispatchValid({ type: "VALID_ID", value: true })
+			  dispatchValidMessage({ type: "VALID_ID", value: "사용 가능한 ID입니다." });
+			  dispatchValid({ type: "VALID_ID", value: true });
 			} else {
-			  dispatchValidMessage({ type: "VALID_ID", value: "이미 중복된 아이디입니다." })
-			  dispatchValid({ type: "VALID_ID", value: false })
+			  dispatchValidMessage({ type: "VALID_ID", value: "이미 중복된 아이디입니다." });
+			  dispatchValid({ type: "VALID_ID", value: false });
 			}
-		  })
+		  });
 		}
-	  }, [inputState.id, validState.id])
+	  },
+	  [inputState.id, validState.id]);	  
 
 	const checkValidPWHandler = useCallback((forSubmit = false) => {
 		if (inputState.password === "") {
