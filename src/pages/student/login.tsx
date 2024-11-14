@@ -33,7 +33,7 @@ function Login() {
 	const [alarm, setAlarm] = useState<string>("");
 	const [inputState, dispatchInput] = useReducer(inputReducer, initialState);
 	const navigate = useNavigate();
-	const [setTokenStatus] = useGetTokenStatus();  // Make sure this returns a function
+	const [, refresh] = useGetTokenStatus();  // Make sure this returns a function
 
 	const loginHandler = () => {
 		if (inputState.id === "" || inputState.password === "") {
@@ -52,7 +52,7 @@ function Login() {
 			.then((res) => {
 				setCookie("Authorization", res, { path: "/", maxAge: 30 * 24 * 60 * 60 });
 
-				setTokenStatus({ showMessage: false });
+				refresh({ showMessage: false });
 			})
 			.catch((error) => {
 				setAlarm(error.response.data.message);

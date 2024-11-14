@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react"
+import { useReducer, useEffect, useCallback } from "react"
 // import { useReducer, useRef, useEffect } from "react"
 import { css } from "@emotion/react"
 import { postTeacherAPI } from "@/api/teacher/user/postTeacherAPI"
@@ -89,20 +89,7 @@ function Signup() {
 
 	const router = useRouter()
 
-	useEffect(() => {
-		checkValidNameHandler()
-	}, [inputState.name])
-	useEffect(() => {
-		checkValidIDHandler()
-	}, [inputState.id])
-	useEffect(() => {
-		checkValidPWHandler()
-	}, [inputState.password])
-	useEffect(() => {
-		checkValidPW2Handler()
-	}, [inputState.password2])
-
-	const checkValidNameHandler = (forSumbit = false) => {
+	const checkValidNameHandler = useCallback((forSumbit = false) => {
 		// 입력값이 없을 때
 		if (inputState.name === "") {
 			// 제출버튼을 눌렀다면
@@ -121,9 +108,9 @@ function Signup() {
 		// 사용가능하다면
 		dispatchValidMessage({ type: "VALID_NAME", value: "" })
 		dispatchValid({ type: "VALID_NAME", value: true })
-	}
+	}, [inputState.name]);
 
-	const checkValidIDHandler = (forSumbit = false, checkVerify = false) => {
+	const checkValidIDHandler = useCallback ((forSumbit = false, checkVerify = false) => {
 		// 입력값이 없을 때
 		if (inputState.id === "") {
 			// 제출버튼을 눌렀다면
@@ -168,9 +155,9 @@ function Signup() {
 				}
 			})
 		}
-	}
+	}, [inputState.id, validState.id])
 
-	const checkValidPWHandler = (forSumbit = false) => {
+	const checkValidPWHandler = useCallback ((forSumbit = false) => {
 		if (inputState.password === "") {
 			if (forSumbit) {
 				dispatchValidMessage({
@@ -193,34 +180,46 @@ function Signup() {
 
 		dispatchValidMessage({ type: "VALID_PW", value: "사용 가능한 비밀번호입니다." })
 		dispatchValid({ type: "VALID_PW", value: true })
-	}
+	}, [inputState.password])
 
-	const checkValidPW2Handler = () => {
-        // 비밀번호 입력이 없는 경우
+	const checkValidPW2Handler = useCallback(() => {
         if (inputState.password === "") {
             dispatchValid({ type: "VALID_PW2", value: false })
             dispatchValidMessage({ type: "VALID_PW2", value: "비밀번호를 먼저 입력해 주세요." })
             return
         }
     
-        // 비밀번호 확인 입력이 없는 경우
         if (inputState.password2 === "") {
             dispatchValid({ type: "VALID_PW2", value: false })
             dispatchValidMessage({ type: "VALID_PW2", value: "비밀번호 확인을 입력해 주세요." })
             return
         }
     
-        // 비밀번호와 비밀번호 확인이 일치하지 않으면
         if (inputState.password2 !== inputState.password) {
             dispatchValid({ type: "VALID_PW2", value: false })
             dispatchValidMessage({ type: "VALID_PW2", value: "비밀번호가 일치하지 않습니다." })
             return
         }
     
-        // 비밀번호와 비밀번호 확인이 일치하고, 유효성 검사 통과
         dispatchValidMessage({ type: "VALID_PW2", value: "비밀번호가 일치합니다." })
         dispatchValid({ type: "VALID_PW2", value: true })
-    }
+    }, [inputState.password, inputState.password2])
+
+	useEffect(() => {
+		checkValidNameHandler()
+	  }, [checkValidNameHandler])
+	
+	  useEffect(() => {
+		checkValidIDHandler()
+	  }, [checkValidIDHandler])
+	
+	  useEffect(() => {
+		checkValidPWHandler()
+	  }, [checkValidPWHandler])
+	
+	  useEffect(() => {
+		checkValidPW2Handler()
+	  }, [checkValidPW2Handler])
 
 	const signUpHandler = async () => {
 		checkValidNameHandler(true)
