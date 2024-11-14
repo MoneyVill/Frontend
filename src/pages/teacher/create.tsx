@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react"
+import React, { useState, useEffect, useReducer, useCallback } from "react"
 import { css } from "@emotion/react"
 import { useRouter } from "next/router"
 import Input from "@/components/common/Input/Input"
@@ -70,19 +70,20 @@ const validMessageReducer = (
 	}
 }
 
-function create() {
+function Create() {
 	const [phase, setPhase] = useState<number>(0)
 	const router = useRouter()
-	const [getTokenStatus, setTokenStatus] = useGetTokenStatus()
-
+	const [, setTokenStatus] = useGetTokenStatus()
+  
 	useEffect(() => {
-		if (phase === 2) {
-			setTimeout(() => {
-				setTokenStatus({showMessage: false})
-				// router.push("/teacher/class/students")
-			}, 2000)
-		}
-	}, [phase])
+	  if (phase === 2) {
+		const timeout = setTimeout(() => {
+		  setTokenStatus({ showMessage: false })
+		  router.push("/teacher/class/students")
+		}, 2000)
+		return () => clearTimeout(timeout)
+	  }
+	}, [phase, router, setTokenStatus])
 
 	const [validState, dispatchValid] = useReducer(validReducer, {
 		school: false,
@@ -106,23 +107,7 @@ function create() {
 		currency: "",
 	})
 
-	useEffect(() => {
-		checkValidSchoolHandler()
-	}, [inputState.school])
-	useEffect(() => {
-		checkValidGradeHandler()
-	}, [inputState.grade])
-	useEffect(() => {
-		checkValidClassHandler()
-	}, [inputState.class])
-	useEffect(() => {
-		checkValidNationHandler()
-	}, [inputState.nation])
-	useEffect(() => {
-		checkValidCurrencyHandler()
-	}, [inputState.currency])
-
-	const checkValidSchoolHandler = async (forSumbit = false) => {
+	const checkValidSchoolHandler = useCallback ((forSumbit = false) => {
 		if (inputState.school === "") {
 			if (forSumbit) {
 				dispatchValidMessage({ type: "VALID_SCHOOL_NAME", value: "학교명을 입력해 주세요." })
@@ -140,9 +125,9 @@ function create() {
 
 		dispatchValidMessage({ type: "VALID_SCHOOL_NAME", value: "" })
 		dispatchValid({ type: "VALID_SCHOOL_NAME", value: true })
-	}
+	}, [inputState.school])
 
-	const checkValidGradeHandler = async (forSumbit = false) => {
+	const checkValidGradeHandler = useCallback ((forSumbit = false) => {
 		if (inputState.grade === "") {
 			if (forSumbit) {
 				dispatchValidMessage({ type: "VALID_GRADE", value: "학년을 입력해 주세요." })
@@ -160,9 +145,9 @@ function create() {
 
 		dispatchValidMessage({ type: "VALID_GRADE", value: "" })
 		dispatchValid({ type: "VALID_GRADE", value: true })
-	}
+	}, [inputState.grade])
 
-	const checkValidClassHandler = async (forSumbit = false) => {
+	const checkValidClassHandler = useCallback ((forSumbit = false) => {
 		if (inputState.class === "") {
 			if (forSumbit) {
 				dispatchValidMessage({ type: "VALID_CLASS", value: "반을 입력해 주세요." })
@@ -180,9 +165,9 @@ function create() {
 
 		dispatchValidMessage({ type: "VALID_CLASS", value: "" })
 		dispatchValid({ type: "VALID_CLASS", value: true })
-	}
+	}, [inputState.class])
 
-	const checkValidNationHandler = async (forSumbit = false) => {
+	const checkValidNationHandler = useCallback ((forSumbit = false) => {
 		if (inputState.nation === "") {
 			if (forSumbit) {
 				dispatchValidMessage({ type: "VALID_NATION", value: "나라 이름을 입력해 주세요." })
@@ -200,9 +185,9 @@ function create() {
 
 		dispatchValidMessage({ type: "VALID_NATION", value: "" })
 		dispatchValid({ type: "VALID_NATION", value: true })
-	}
+	}, [inputState.nation])
 
-	const checkValidCurrencyHandler = async (forSumbit = false) => {
+	const checkValidCurrencyHandler = useCallback ((forSumbit = false) => {
 		if (inputState.currency === "") {
 			if (forSumbit) {
 				dispatchValidMessage({ type: "VALID_CURRENCY", value: "화폐 단위를 입력해 주세요." })
@@ -220,8 +205,28 @@ function create() {
 
 		dispatchValidMessage({ type: "VALID_CURRENCY", value: "" })
 		dispatchValid({ type: "VALID_CURRENCY", value: true })
-	}
+	}, [inputState.currency])
 
+	useEffect(() => {
+		checkValidSchoolHandler()
+	  }, [checkValidSchoolHandler])
+	
+	  useEffect(() => {
+		checkValidGradeHandler()
+	  }, [checkValidGradeHandler])
+	
+	  useEffect(() => {
+		checkValidClassHandler()
+	  }, [checkValidClassHandler])
+	
+	  useEffect(() => {
+		checkValidNationHandler()
+	  }, [checkValidNationHandler])
+	
+	  useEffect(() => {
+		checkValidCurrencyHandler()
+	  }, [checkValidCurrencyHandler])
+	
 	const passFirstPhaseHandler = () => {
 		if (validState.school && validState.grade && validState.class) {
 			setPhase(() => 1)
@@ -243,9 +248,9 @@ function create() {
 					currency: inputState.currency,
 				},
 			})
-				.then((res) => {
-					setPhase(() => 2)
-				})
+				// .then((res) => {
+				// 	setPhase(() => 2)
+				// })
 				.catch((err) => {
 					console.log(err)
 				})
@@ -373,11 +378,11 @@ function create() {
 						></Button>
 					</div>
 				</div>
-				{/* <div css={phaseWrapperCSS}>
-					<UseAnimations animation={alertCircle} size={256} />
+				<div css={phaseWrapperCSS}>
+					{/* <UseAnimations animation={alertCircle} size={256} /> */}
 					<div css={successLabelCSS}>학급 경제가 성공적으로 생성되었습니다!</div>
 					<div css={successSubLabelCSS}>잠시 후, 학급 관리 페이지로 리다이렉트됩니다!</div>
-				</div> */}
+				</div>
 			</div>
 		</div>
 	)
@@ -457,4 +462,4 @@ const imageWrapperCSS2 = css`
 	margin-bottom: 36px;
 `
 
-export default create
+export default Create

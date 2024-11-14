@@ -15,6 +15,7 @@ function useGetTokenStatus(): [getTokenStatusType, ({showMessage}: {showMessage:
             return(res)
         })
         .catch((error) => {
+            console.error("Token status fetch error:", error);
             setTokenStatusAtom(() => {
                 return {
                     status: "require_login",
